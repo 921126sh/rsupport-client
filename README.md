@@ -1,27 +1,42 @@
-# RsupportClient
+# 알서포트 서버
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
 
-## Development server
+# 작업순서
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+1. 노드 설치
 
-## Code scaffolding
+```
+brew install node or 직접설치
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+2. 의존성 설치
 
-## Build
+```
+npm install -g @angular/cli
+npm i
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+3. 시작
 
-## Running unit tests
+```
+ng s -o
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+# 기술스택
 
-## Running end-to-end tests
+-   node : 14.16.0
+-   angular-core : 10.1.7
+-   angular-cli : 10.1.7
+-   typescript : 4.0.7
+-   bootstrap : 4.5.0
+-   외 package.json참고
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-## Further help
+# endpoint
+-   http://localhost:4200
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+# 참고
+-   [ANGULAR](https://angular.io/)
+
+# 주의사항
+- 서버에서 CORS허용 localhost:4200 으로 주었기 때문에 포트 변경시 CORS에러 발생
