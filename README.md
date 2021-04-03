@@ -3,20 +3,26 @@
 
 # 작업순서
 
-1. 노드 설치
+1. 알서포트 클라이언트 클론
+
+```
+git clone https://github.com/esmoney/rsupport-client.git
+```
+
+2. 노드 설치
 
 ```
 brew install node or 직접설치
 ```
 
-2. 의존성 설치
+3. 의존성 설치
 
 ```
 npm install -g @angular/cli
 npm i
 ```
 
-3. 시작
+4. 시작
 
 ```
 ng s -o
