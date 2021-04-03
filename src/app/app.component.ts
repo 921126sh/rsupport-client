@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 interface Page {
   total: number;
   pageable: Pageable;
-  content: Notice[];
+  contentList: Notice[];
 }
 
 interface Pageable {
@@ -17,16 +17,15 @@ interface Pageable {
 }
 
 interface Notice {
-  chgDt: string;
-  chgId: string;
-  chgNm: string;
-  noticeContent: string;
-  noticeNo: number;
   noticeTitle: string;
-  regDt: string;
-  regId: string;
-  regNm: string;
-  total: number;
+  noticeContent: string;
+  noticeNo?: number;
+  chgDt?: string;
+  chgId?: string;
+  chgNm?: string;
+  regDt?: string;
+  regId?: string;
+  regNm?: string;
 }
 
 @Component({
@@ -35,31 +34,63 @@ interface Notice {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  notices: Notice[] = [];
-
+  readonly URL = 'http://localhost:8080/rs-server/notices';
   page: number = 1;
   pageSize: number = 10;
+
+  notices: Notice[] = [];
+  selectedNotice: Notice = { noticeTitle: '', noticeContent: '' };
+
   constructor(private http: HttpClient) {
     this.get();
   }
 
   get() {
     this.http
-      .get('http://localhost:8080/rs-server/notices')
+      .get(this.URL, {
+        params: {
+          page: String(this.page - 1),
+          size: '10',
+        },
+      })
       .subscribe((res: Page) => {
-        this.notices = res.content.map((content) => content);
+        this.notices = res.contentList.map((content) => content);
         this.page = res.pageable.pageNumber + 1;
-        this.pageSize = res.total;
+        this.pageSize = res.total * this.notices.length;
       });
   }
 
-  save() {}
+  save() {
+    if (
+      this.selectedNotice.noticeNo === null ||
+      this.selectedNotice.noticeNo === undefined
+    ) {
+      this.http.post(this.URL, this.selectedNotice).subscribe((res) => {
+        this.get();
+      });
+    } else {
+      this.http
+        .put(`${this.URL}/${this.selectedNotice.noticeNo}`, this.selectedNotice)
+        .subscribe((res) => {
+          this.get();
+        });
+    }
+  }
 
   update() {}
 
   delete() {}
 
   onPageChange(currentPage) {
+    this.page = currentPage;
+    this.get();
     console.log(currentPage);
+  }
+
+  onClickRow(notice: Notice, idx: number) {
+    this.selectedNotice =
+      this.selectedNotice == notice
+        ? { noticeTitle: '', noticeContent: '' }
+        : notice;
   }
 }

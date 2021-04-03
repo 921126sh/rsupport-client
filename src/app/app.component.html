@@ -10,7 +10,7 @@
           <th>작성일</th>
           <th>수정자</th>
           <th>수정일</th>
-          <tr *ngFor="let notice of notices">
+          <tr *ngFor="let notice of notices" (click)="onClickRow(notice, idx)" [class.active]="notice == selectedNotice">
             <td>{{notice.noticeNo}}</td>
             <td>{{notice.noticeTitle}}</td>
             <td>{{notice.noticeContent}}</td>
@@ -20,22 +20,19 @@
             <td>{{notice.chgDt}}</td>
           </tr>
         </table>
-        <ngb-pagination [collectionSize]="pageSize" [(page)]="page" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+        <ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="pageSize" [(page)]="page" [maxSize]="5" [rotate]="true"></ngb-pagination>
       </div>
 
       <div class="col-12">
-        <form>
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">제목</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">설명</label>
-            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">저장</button>
-          <button type="submit" class="btn btn-primary">수정</button>
-        </form>
+        <div class="mb-3">
+          <label for="title" class="form-label">제목</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedNotice && selectedNotice.noticeTitle" id="noticeTitle">
+        </div>
+        <div class="mb-3">
+          <label for="content" class="form-label">내용</label>
+          <textarea class="form-control" id="noticeContent" [(ngModel)]="selectedNotice && selectedNotice.noticeContent" rows="10"></textarea>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="save()">저장</button>
       </div>
     </div>
   </div>
