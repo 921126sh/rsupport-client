@@ -3,13 +3,14 @@
     <div class="col-12">
       <div style="margin:20px;">
         <table class="table table-bordered ">
-          <th>순서</th>
+          <th>공지번호</th>
           <th>제목</th>
           <th>내용</th>
           <th>작성자</th>
           <th>작성일</th>
           <th>수정자</th>
           <th>수정일</th>
+          <th>action</th>
           <tr *ngFor="let notice of notices" (click)="onClickRow(notice, idx)" [class.active]="notice == selectedNotice">
             <td>{{notice.noticeNo}}</td>
             <td>{{notice.noticeTitle}}</td>
@@ -18,6 +19,8 @@
             <td>{{notice.regDt}}</td>
             <td>{{notice.chgId}}</td>
             <td>{{notice.chgDt}}</td>
+            <td><button type="button" class="btn btn-primary" (click)="delete(notice.noticeNo)">삭제</button>
+            </td>
           </tr>
         </table>
         <ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="pageSize" [(page)]="page" [maxSize]="5" [rotate]="true"></ngb-pagination>

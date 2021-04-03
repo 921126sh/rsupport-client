@@ -34,18 +34,37 @@ interface Notice {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  /**
+   * endpoint
+   */
   readonly URL = 'http://localhost:8080/rs-server/notices';
+  /**
+   * 페이지 번호
+   */
   page: number = 1;
+  /**
+   * 페이지당 row 개수
+   */
   pageSize: number = 10;
 
+  /**
+   * 공지목록
+   */
   notices: Notice[] = [];
+
+  /**
+   * 선택된 공지
+   */
   selectedNotice: Notice = { noticeTitle: '', noticeContent: '' };
 
   constructor(private http: HttpClient) {
-    this.get();
+    this.retrieve();
   }
 
-  get() {
+  /**
+   * 공지를 조회한다.
+   */
+  retrieve(): void {
     this.http
       .get(this.URL, {
         params: {
@@ -60,34 +79,56 @@ export class AppComponent {
       });
   }
 
+  /**
+   * 공지를 저장 또는 수정 요청한다.
+   */
   save() {
     if (
       this.selectedNotice.noticeNo === null ||
       this.selectedNotice.noticeNo === undefined
     ) {
       this.http.post(this.URL, this.selectedNotice).subscribe((res) => {
-        this.get();
+        this.retrieve();
       });
     } else {
       this.http
         .put(`${this.URL}/${this.selectedNotice.noticeNo}`, this.selectedNotice)
-        .subscribe((res) => {
-          this.get();
+        .subscribe(() => {
+          this.retrieve();
         });
     }
   }
 
-  update() {}
+  /**
+   * 공지번호의 공지를 삭제한다.
+   *
+   * @param noticeNo 공지번호
+   */
+  delete(noticeNo: number) {
+    this.http.delete(`${this.URL}/${noticeNo}`).subscribe(() => {
+      this.retrieve();
+    });
+  }
 
-  delete() {}
+  ////////////////////////////////////////////////////////////////////////////////////
 
-  onPageChange(currentPage) {
+  /**
+   * 페이지 번호에 해당하는 공지목록을 조회한다.
+   *
+   * @param currentPage 페이지 번호
+   */
+  onPageChange(currentPage): void {
     this.page = currentPage;
-    this.get();
+    this.retrieve();
     console.log(currentPage);
   }
 
-  onClickRow(notice: Notice, idx: number) {
+  /**
+   * 공지를 선택 한다.
+   *
+   * @param notice 공지
+   */
+  onClickRow(notice: Notice): void {
     this.selectedNotice =
       this.selectedNotice == notice
         ? { noticeTitle: '', noticeContent: '' }
