@@ -25,3 +25,8 @@
   font-size: 15px;
   font-weight: bold;
 }
+
+.justify-content-center {
+  display: flex !important;
+  justify-content: center !important;
+}

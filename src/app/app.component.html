@@ -14,14 +14,16 @@
             <button type="button" class="btn btn-primary btn-block" (click)="login()">Log in</button>
           </div>
         </form>
+        <p>아이디: id1 ~ id200 <br />
+          비밀번호: pwd1 ~ pwd200
+        </p>
       </div>
     </div>
   </div>
 
-
   <div class="row" *ngIf=isLogin>
-    <h2 style="margin-top: 15px;">목록영역</h2>
-    <div class="col-12" style="border: 1px solid;">
+    <div class="col-12">
+      <h3 style="margin-top: 15px;">목록영역</h3>
       <table class="table table-bordered ">
         <th>공지번호</th>
         <th>제목</th>
@@ -43,11 +45,14 @@
           </td>
         </tr>
       </table>
-      <ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="pageSize * 10" [(page)]="page" [maxSize]="5" [rotate]="true"></ngb-pagination>
+      <div class="justify-content-center">
+        <ngb-pagination (pageChange)="onPageChange($event)" [collectionSize]="pageSize * 10" [(page)]="page" [maxSize]="5" [rotate]="true"></ngb-pagination>
+      </div>
     </div>
 
-    <h2 style="margin-top: 15px;">입력영역</h2>
-    <div class="col-12" style="border: 1px solid;">
+
+    <div class="col-12">
+      <h3 style="margin-top: 15px;">입력영역</h3>
       <div class="mb-3">
         <label for="title" class="form-label">제목</label>
         <input type="text" class="form-control" [(ngModel)]="selectedNotice && selectedNotice.noticeTitle" id="noticeTitle">
