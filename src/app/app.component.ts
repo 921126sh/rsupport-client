@@ -37,7 +37,7 @@ export class AppComponent {
   /**
    * endpoint
    */
-  readonly URL = 'http://localhost:8080/rs-server/notices';
+  readonly URL = 'http://localhost:8080/rs-server';
   /**
    * 페이지 번호
    */
@@ -57,8 +57,44 @@ export class AppComponent {
    */
   selectedNotice: Notice = { noticeTitle: '', noticeContent: '' };
 
-  constructor(private http: HttpClient) {
-    this.retrieve();
+  /**
+   * 로그인여부
+   */
+  isLogin: boolean = false;
+
+  /**
+   * 아이디
+   */
+  id: string = '';
+
+  /**
+   * 비밀번호
+   */
+  pwd: string = '';
+
+  constructor(private http: HttpClient) {}
+
+  /**
+   * 로그인을 요청한다.
+   */
+  login(): void {
+    if (this.id === '' || this.pwd === '') {
+      alert(`입력 된 정보가 올바르지 않습니다.`);
+    }
+
+    this.http
+      .post(`${this.URL}/auth`, { userId: this.id, userPw: this.pwd })
+      .subscribe((res) => {
+        alert(
+          `
+          로그인 성공!!!
+          아이디     :${res['userId']}
+          사용자이름 :${res['userNm']}
+          토큰    :${res['token']}`
+        );
+        this.isLogin = !this.isLogin;
+        this.retrieve();
+      });
   }
 
   /**
@@ -66,16 +102,16 @@ export class AppComponent {
    */
   retrieve(): void {
     this.http
-      .get(this.URL, {
+      .get(`${this.URL}/notices`, {
         params: {
           page: String(this.page - 1),
-          size: '10',
+          size: '5',
         },
       })
       .subscribe((res: Page) => {
         this.notices = res.contentList.map((content) => content);
         this.page = res.pageable.pageNumber + 1;
-        this.pageSize = res.total * this.notices.length;
+        this.pageSize = res.total;
       });
   }
 
@@ -87,13 +123,20 @@ export class AppComponent {
       this.selectedNotice.noticeNo === null ||
       this.selectedNotice.noticeNo === undefined
     ) {
-      this.http.post(this.URL, this.selectedNotice).subscribe((res) => {
-        this.retrieve();
-      });
+      this.http
+        .post(`${this.URL}/notices`, this.selectedNotice)
+        .subscribe(() => {
+          this.selectedNotice = { noticeTitle: '', noticeContent: '' };
+          this.retrieve();
+        });
     } else {
       this.http
-        .put(`${this.URL}/${this.selectedNotice.noticeNo}`, this.selectedNotice)
+        .put(
+          `${this.URL}/notices/${this.selectedNotice.noticeNo}`,
+          this.selectedNotice
+        )
         .subscribe(() => {
+          this.selectedNotice = { noticeTitle: '', noticeContent: '' };
           this.retrieve();
         });
     }
@@ -105,7 +148,8 @@ export class AppComponent {
    * @param noticeNo 공지번호
    */
   delete(noticeNo: number) {
-    this.http.delete(`${this.URL}/${noticeNo}`).subscribe(() => {
+    this.http.delete(`${this.URL}/notices/${noticeNo}`).subscribe(() => {
+      this.selectedNotice = { noticeTitle: '', noticeContent: '' };
       this.retrieve();
     });
   }
